@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -20,9 +22,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'last_name',
+        'first_name',
         'email',
         'password',
+        'role',
+        'homeroom',
     ];
 
     /**
@@ -50,15 +55,19 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the user's initials
-     */
-    public function initials(): string
+    public function homeroomTeacher(): BelongsTo|null
     {
-        return Str::of($this->name)
-            ->explode(' ')
-            ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
-            ->implode('');
+        if ($this->role === 'teacher') {
+            return null;
+        }
+        return $this->belongsTo(User::class, 'homeroom');
+    }
+
+    public function homeroomStudents(): HasMany|null
+    {
+        if ($this->role === 'student') {
+            return null;
+        }
+        return $this->hasMany(User::class, 'homeroom');
     }
 }
