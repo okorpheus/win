@@ -65,24 +65,15 @@ class User extends Authenticatable
 
     public function homeroomTeacher(): BelongsTo|null
     {
-        if ($this->role === 'teacher') {
-            return null;
-        }
         return $this->belongsTo(User::class, 'homeroom');
     }
 
     public function homeroomStudents(): HasMany|null
     {
-        if ($this->role === 'student') {
-            return null;
-        }
         return $this->hasMany(User::class, 'homeroom');
     }
     public function availability(): HasOne|null
     {
-        if ($this->role === 'student') {
-            return null;
-        }
         return $this->hasOne(TeacherAvailability::class);
     }
 }
