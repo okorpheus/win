@@ -19,9 +19,8 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'role' => ['required', Rule::in(['admin', 'teacher', 'student'])],
+            'name' => ['required', 'string', 'max:255'],
+            'role' => ['sometimes', Rule::in(['admin', 'teacher', 'student'])],
             'email' => [
                 'required',
                 'string',
@@ -32,9 +31,12 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
+        if (! array_key_exists('role', $input)) {
+            $input['role'] = 'student';
+        }
+
         return User::create([
-            'first_name' => $input['first_name'],
-            'last_name' => $input['last_name'],
+            'name' => $input['name'],
             'role' => $input['role'],
             'email' => $input['email'],
             'password' => $input['password'],
