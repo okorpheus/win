@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->foreignIdFor(User::class, 'student')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('assignment_id');
-            $table->string('assignment_type');
+            $table->unsignedBigInteger('assignable_id');
+            $table->string('assignable_type');
             $table->timestamps();
         });
     }

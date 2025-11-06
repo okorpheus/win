@@ -17,7 +17,7 @@ class Assignment extends Model
     {
         return $this->belongsTo(User::class, 'student');
     }
-    public function assignment(): MorphTo
+    public function assignable(): MorphTo
     {
         return $this->morphTo();
     }

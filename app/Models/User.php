@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -58,8 +59,8 @@ class User extends Authenticatable
 
     public function initials(): string
     {
-        $initial1 = substr($this->first_name,0,1);
-        $initial2 = substr($this->last_name,0,1);
+        $initial1 = substr($this->first_name, 0, 1);
+        $initial2 = substr($this->last_name, 0, 1);
         return $initial1.$initial2;
     }
 
@@ -72,8 +73,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'homeroom');
     }
+
     public function availability(): HasOne|null
     {
         return $this->hasOne(TeacherAvailability::class);
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class, 'student');
+    }
+
+    public function assigned_students(): MorphMany
+    {
+        return $this->morphMany(Assignment::class, 'assignable');
     }
 }
